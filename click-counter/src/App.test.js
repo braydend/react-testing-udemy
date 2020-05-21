@@ -13,10 +13,24 @@ test('renders without error', () => {
   expect(appComponent.length).toBe(1);
 });
 
-test('renders increment button', () => {});
+test('renders increment button', () => {
+  const wrapper = shallow(<App />);
 
-test('renders counter display', () => {});
+  const appComponent = wrapper.find("[data-test='increment-button']");
 
-test('counter starts at 0', () => {});
+  expect(appComponent.length).toBe(1);
+});
 
-test('clicking button increments counter display', () => {});
+test('renders counter display', () => { 
+  const wrapper = shallow(<App />);
+
+  const appComponent = wrapper.find("[data-test='counter-display']");
+
+  expect(appComponent.length).toBe(1)
+});
+
+test('counter starts at 0', () => {
+});
+
+test('clicking button increments counter display', () => {
+});
