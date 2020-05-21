@@ -6,7 +6,7 @@ function App() {
   const [counter, setCounter] = useState(0);
 
   return (
-    <div className="App">
+    <div className="App" data-test="component-app">
       <h1>The counter is currently: {counter}</h1>
       <button onClick={() => setCounter(counter + 1)}>Increment</button>
     </div>
