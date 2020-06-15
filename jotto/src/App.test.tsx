@@ -2,8 +2,18 @@ import React from 'react';
 import App from './App';
 import { shallow } from 'enzyme';
 
-test('renders without error', () => {
-  const wrapper = shallow(<App />);
+const setUp = () => shallow(<App />);
 
-  expect(wrapper.length).toBe(1);
+describe('<App />', () => {
+  test('renders without error', () => {
+    const wrapper = setUp();
+
+    expect(wrapper.length).toBe(1);
+  });
+
+  test('renders correctly', () => {
+    const wrapper = setUp();
+
+    expect(wrapper.text()).toContain('Jotto');
+  });
 });
