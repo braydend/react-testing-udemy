@@ -10,6 +10,7 @@ const Input: React.FC<Props> = ({ secretWord }) => {
 
     const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
+        setCurrentGuess("");
     };
 
     return (<div>
