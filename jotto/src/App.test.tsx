@@ -1,8 +1,16 @@
 import React from 'react';
 import App from './App';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
+import hookActions from './actions/hookActions';
 
-const setUp = () => shallow(<App />);
+const mockGetSecretWord = jest.fn();
+
+const setUp = () => {
+  mockGetSecretWord.mockClear();
+  hookActions.getSecretWord = mockGetSecretWord;
+
+  return mount(<App />);
+};
 
 describe('<App />', () => {
   test('renders without error', () => {
@@ -15,5 +23,13 @@ describe('<App />', () => {
     const wrapper = setUp();
 
     expect(wrapper.text()).toContain('Jotto');
+  });
+});
+
+describe('getSecretWord calls', () => {
+  test('getSecretWord is called on component mount', () => {
+    setUp();
+
+    expect(mockGetSecretWord).toHaveBeenCalled();
   });
 });
