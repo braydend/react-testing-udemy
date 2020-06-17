@@ -1,13 +1,17 @@
 import React from 'react';
 import App from './App';
-import { mount } from 'enzyme';
+import { mount, ReactWrapper } from 'enzyme';
 import hookActions from './actions/hookActions';
 
 const mockGetSecretWord = jest.fn();
 
-const setUp = () => {
+const setUp = (secretWord: string | null = "party") => {
   mockGetSecretWord.mockClear();
   hookActions.getSecretWord = mockGetSecretWord;
+
+  const mockUseReducer = jest.fn().mockReturnValue([{ secretWord }, jest.fn()]);
+
+  React.useReducer = mockUseReducer;
 
   return mount(<App />);
 };
@@ -21,8 +25,10 @@ describe('<App />', () => {
 
   test('renders correctly', () => {
     const wrapper = setUp();
+    const app = wrapper.find('#app');
 
     expect(wrapper.text()).toContain('Jotto');
+    expect(app.length).toBe(1);
   });
 });
 
@@ -40,5 +46,45 @@ describe('getSecretWord calls', () => {
     wrapper.setProps({});
 
     expect(mockGetSecretWord).not.toHaveBeenCalled();
+  });
+});
+
+describe('secretWord is not null', () => {
+  let wrapper: ReactWrapper;
+
+  beforeEach(() => {
+    wrapper = setUp("party");
+  });
+
+  test('renders app when secretWord is not null', () => {
+    const app = wrapper.find('#app');
+
+    expect(app.exists()).toBe(true);
+  });
+  
+  test('does not render spinner when secretWord is not null', () => {
+    const spinner = wrapper.find('#spinner');
+
+    expect(spinner.exists()).toBe(false);
+  });
+});
+
+describe('secretWord is null', () => {
+  let wrapper: ReactWrapper;
+
+  beforeEach(() => {
+    wrapper = setUp(null);
+  });
+
+  test('does not render app when secretWord is not null', () => {
+    const app = wrapper.find('#app');
+
+    expect(app.exists()).toBe(false);
+  });
+  
+  test('renders spinner when secretWord is not null', () => {
+    const spinner = wrapper.find('#spinner');
+
+    expect(spinner.exists()).toBe(true);
   });
 });
