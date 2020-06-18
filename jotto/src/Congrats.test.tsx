@@ -1,12 +1,15 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import Congrats, { CongratsProps } from './Congrats';
+import LanguageContext from './contexts/LanguageContext';
 
-const setup = (props: CongratsProps) => {
-    const defaultProps: CongratsProps = { success: true }
-    const setupProps: CongratsProps = { ...defaultProps, ...props };
+const setup = ({ success = true, language = 'en' }: { success?: boolean, language?: string }) => {
     
-    return shallow(<Congrats {...setupProps} />);
+    return mount(
+        <LanguageContext.Provider value={language}>
+            <Congrats success={success} />
+        </LanguageContext.Provider>
+    );
 };
 
 describe('<Congrats />', () => {
@@ -27,5 +30,18 @@ describe('<Congrats />', () => {
         const component = wrapper.find('div');
 
         expect(component.text().length).not.toBe(0);
+    });
+});
+
+describe('Language picker', () => {
+    test('correctly renders message in english', () => {
+        const wrapper = setup({ success: true, language: 'en' });
+
+        expect(wrapper.text()).toBe('Congratulations! You guessed the word!');
+    });
+    test('correctly renders message in emoji', () => {
+        const wrapper = setup({ success: true, language: 'emoji' });
+
+        expect(wrapper.text()).toBe('🎯🎉');
     });
 });

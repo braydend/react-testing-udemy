@@ -4,20 +4,26 @@ import GuessedWords from './GuessedWords';
 import Congrats from './Congrats';
 import hookActions from './actions/hookActions';
 import Input from './Input';
+import LanguageContext from './contexts/LanguageContext';
+import LanguagePicker from './LanguagePicker';
 
 type StateType = {
   secretWord: string | null,
+  language: string;
 };
 
 type ActionType = {
-  type: 'setSecretWord';
+  type: 'setSecretWord' | 'setLanguage';
   payload: any;
 };
 
 const reducer = (state: StateType, action: ActionType): StateType => {
   switch (action.type) {
     case "setSecretWord": 
-      return { ...state, secretWord: action.payload };
+      return { ...state, secretWord: action.payload };    
+      
+    case "setLanguage": 
+      return { ...state, language: action.payload };
 
     default:
       throw new Error(`invalid action type ${action}`);
@@ -25,10 +31,14 @@ const reducer = (state: StateType, action: ActionType): StateType => {
 };
 
 function App() {
-  const [state, dispatch] = React.useReducer(reducer, { secretWord: null});
+  const [state, dispatch] = React.useReducer(reducer, { secretWord: null, language: 'en'});
 
   const setSecretWord = (secretWord: string) => {
     dispatch({ type: "setSecretWord", payload: secretWord });
+  };
+
+  const setLanguage = (language: string) => {
+    dispatch({ type: "setLanguage", payload: language });
   };
 
   useEffect(() => {
@@ -36,25 +46,29 @@ function App() {
   }, []);
 
   const {
-    secretWord
+    secretWord, 
+    language,
   } = state;
 
   return (
-    <div className="App">
-      <h1>Jotto!</h1>
-      {secretWord ? (
-        <div id="app">
-         <Input secretWord={secretWord} />
-         <Congrats success={false} />
-         <GuessedWords guessedWords={[{word: 'foo', letterMatchCount: 1}]} />
-       </div>
-      ) : (
-        <div id="spinner">
-          <p>Loading secret word</p>
+    <LanguageContext.Provider value={language}>
+      <div className="App">
+        <LanguagePicker setLanguage={setLanguage} />
+        <h1>Jotto!</h1>
+        {secretWord ? (
+          <div id="app">
+          <Input secretWord={secretWord} />
+          <Congrats success={false} />
+          <GuessedWords guessedWords={[{word: 'foo', letterMatchCount: 1}]} />
         </div>
-      )}
-     
-    </div>
+        ) : (
+          <div id="spinner">
+            <p>Loading secret word</p>
+          </div>
+        )}
+      
+      </div>
+    </LanguageContext.Provider>
   );
 }
 
