@@ -64,3 +64,57 @@ describe('if there are words guessed', () => {
         expect(guessedWordsNodes.length).toBe(guessedWords.length);
     });
 });
+
+
+describe('language picker', () => {
+    describe('english', () => {
+        test('renders guess instructions in english by default', () => {
+            const wrapper = setup({ guessedWords: [] });
+            const guessInstructions = wrapper.find('#instructions');
+    
+            expect(guessInstructions.text()).toBe('Try to guess the secret word!');
+        });
+      
+        test('renders guessed words header in english by default', () => {
+            const wrapper = setup({ guessedWords: [{ word: 'foo', letterMatchCount: 1}] });
+            const guessInstructions = wrapper.find('#guessed-words-header');
+    
+            expect(guessInstructions.text()).toBe('Guessed Words');
+        });
+        
+        test('renders guess letter match count in english by default', () => {
+            const wrapper = setup({ guessedWords: [{ word: 'foo', letterMatchCount: 1}] });
+            const firstGuesedWord = wrapper.find('#guessed-words').first();
+    
+            expect(firstGuesedWord.text()).toBe('foo - 1 Matching Letters');
+        });
+    });
+    describe('emoji', () => {
+        beforeAll(() => {
+            const mockUseContext = jest.fn().mockReturnValue('emoji');
+            React.useContext = mockUseContext;
+        });
+
+        test('renders guess instructions in emoji', () => {
+            const wrapper = setup({ guessedWords: [] });
+            const guessInstructions = wrapper.find('#instructions');
+    
+            expect(guessInstructions.text()).toBe('🤔🤫🔤');
+        });  
+
+        test('renders guessed words header in emoji', () => {
+            const wrapper = setup({ guessedWords: [{ word: 'foo', letterMatchCount: 1}] });
+            const guessInstructions = wrapper.find('#guessed-words-header');
+    
+            expect(guessInstructions.text()).toBe('🤷‍');
+        });
+
+        test('renders guess letter match count in emoji', () => {
+            const wrapper = setup({ guessedWords: [{ word: 'foo', letterMatchCount: 1}] });
+            const firstGuesedWord = wrapper.find('#guessed-words').first();
+    
+            expect(firstGuesedWord.text()).toBe('foo - 1 ✅');
+
+        })
+    });
+});
