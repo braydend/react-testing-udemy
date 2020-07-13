@@ -6,6 +6,7 @@ import hookActions from './actions/hookActions';
 import Input from './Input';
 import LanguageContext from './contexts/LanguageContext';
 import LanguagePicker from './LanguagePicker';
+import SuccessContext from './contexts/SuccessContext';
 
 type StateType = {
   secretWord: string | null,
@@ -51,24 +52,26 @@ function App() {
   } = state;
 
   return (
-    <LanguageContext.Provider value={language}>
-      <div className="App">
-        <LanguagePicker setLanguage={setLanguage} />
-        <h1>Jotto!</h1>
-        {secretWord ? (
-          <div id="app">
-          <Input secretWord={secretWord} />
-          <Congrats success={false} />
-          <GuessedWords guessedWords={[{word: 'foo', letterMatchCount: 1}]} />
+      <LanguageContext.Provider value={language}>
+        <div className="App">
+          <LanguagePicker setLanguage={setLanguage} />
+          <h1>Jotto!</h1>
+          {secretWord ? (
+            <div id="app">
+              <SuccessContext.SuccessProvider>
+                <Input secretWord={secretWord} />
+                <Congrats />
+              </SuccessContext.SuccessProvider>
+              <GuessedWords guessedWords={[{word: 'foo', letterMatchCount: 1}]} />
+            </div>
+          ) : (
+            <div id="spinner">
+              <p>Loading secret word</p>
+            </div>
+          )}
+        
         </div>
-        ) : (
-          <div id="spinner">
-            <p>Loading secret word</p>
-          </div>
-        )}
-      
-      </div>
-    </LanguageContext.Provider>
+      </LanguageContext.Provider>
   );
 }
 
