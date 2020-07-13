@@ -22,6 +22,11 @@ const Input: React.FC<Props> = ({ secretWord }) => {
     const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.preventDefault();
         (setGuessedWords as Dispatch<SetStateAction<GuessedWord[]>>)([...guessedWords as GuessedWord[], { word: currentGuess as string, letterMatchCount: getLetterMatchCount(currentGuess as string, secretWord)}]);
+
+        if (currentGuess === secretWord){
+            (setSuccess as Dispatch<SetStateAction<boolean>>)(true);
+        }
+
         setCurrentGuess("");
     };
 
