@@ -59,11 +59,11 @@ function App() {
           <h1>Jotto!</h1>
           {secretWord ? (
             <div id="app">
-              <SuccessContext.SuccessProvider>
-                <Input secretWord={secretWord} />
-                <Congrats />
-              </SuccessContext.SuccessProvider>
               <GuessedWordsContext.GuessedWordsProvider>
+                <SuccessContext.SuccessProvider>
+                  <Input secretWord={secretWord} />
+                  <Congrats />
+                </SuccessContext.SuccessProvider>
                 <GuessedWords />
               </GuessedWordsContext.GuessedWordsProvider>
             </div>

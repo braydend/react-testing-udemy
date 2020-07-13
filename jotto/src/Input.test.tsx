@@ -2,12 +2,18 @@ import React from 'react';
 import { mount, ReactWrapper } from "enzyme";
 import Input from "./Input";
 import LanguageContext from './contexts/LanguageContext';
+import GuessedWordsContext from './contexts/GuessedWordsContext';
+import SuccessContext from './contexts/SuccessContext';
 
-const setUp = ({secretWord = 'party', language = 'en'}: { secretWord?: string, language?: string }) => {
+const setUp = ({secretWord = 'party', language = 'en', success = false, setSuccess = jest.fn()}: { secretWord?: string, language?: string, success?: boolean, setSuccess?: () => {} }) => {
     return mount(
-        <LanguageContext.Provider value={language}>
-            <Input secretWord={secretWord} />
-        </LanguageContext.Provider>
+        <SuccessContext.SuccessProvider value={[success, setSuccess]}>
+            <GuessedWordsContext.GuessedWordsProvider>
+                <LanguageContext.Provider value={language}>
+                    <Input secretWord={secretWord} />
+                </LanguageContext.Provider>
+            </GuessedWordsContext.GuessedWordsProvider>
+        </SuccessContext.SuccessProvider>
     );
 };
 
@@ -43,6 +49,11 @@ describe('<Input />', () => {
 
         expect(mockSetCurrentGuess).toHaveBeenCalledWith("");
     });
+
+    test('input component does not render when success is true', () => {
+        wrapper = setUp({success: true});
+        expect(wrapper.isEmptyRender()).toBe(true);
+    })
 });
 
 describe('Language picker', () => {
