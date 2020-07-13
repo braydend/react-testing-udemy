@@ -1,6 +1,7 @@
 import React, { Dispatch, SetStateAction, useContext, useState, createContext } from 'react';
+import { GuessedWord } from '../GuessedWords';
 
-const guessedWordsContext = createContext<(string[] | Dispatch<SetStateAction<string[]>>)[] | undefined>(undefined);
+const guessedWordsContext = createContext<(GuessedWord[] | Dispatch<SetStateAction<GuessedWord[]>>)[] | undefined>(undefined);
 
 const useGuessedWords = () => {
     const context = useContext(guessedWordsContext);
@@ -13,7 +14,7 @@ const useGuessedWords = () => {
 };
 
 const GuessedWordsProvider: React.FC = ({ children }) => {
-    const [guessedWords, setGuessedWords] = useState<string[]>([]);
+    const [guessedWords, setGuessedWords] = useState<GuessedWord[]>([]);
 
     return (
         <guessedWordsContext.Provider value={[guessedWords, setGuessedWords]}>

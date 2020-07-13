@@ -7,6 +7,7 @@ import Input from './Input';
 import LanguageContext from './contexts/LanguageContext';
 import LanguagePicker from './LanguagePicker';
 import SuccessContext from './contexts/SuccessContext';
+import GuessedWordsContext from './contexts/GuessedWordsContext';
 
 type StateType = {
   secretWord: string | null,
@@ -62,7 +63,9 @@ function App() {
                 <Input secretWord={secretWord} />
                 <Congrats />
               </SuccessContext.SuccessProvider>
-              <GuessedWords guessedWords={[{word: 'foo', letterMatchCount: 1}]} />
+              <GuessedWordsContext.GuessedWordsProvider>
+                <GuessedWords />
+              </GuessedWordsContext.GuessedWordsProvider>
             </div>
           ) : (
             <div id="spinner">

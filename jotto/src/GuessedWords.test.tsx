@@ -1,23 +1,18 @@
 import React from 'react';
-import GuessedWords, { Props, GuessedWord } from './GuessedWords';
+import GuessedWords, { GuessedWord } from './GuessedWords';
 import { shallow, ShallowWrapper } from 'enzyme';
+import GuessedWordsContext from './contexts/GuessedWordsContext';
 
-const defaultProps: Props = {
-    guessedWords: [
-        { word: 'train', letterMatchCount: 3 },
-    ],
-};
+const setup = (guessedWords: GuessedWord[]) => {
+    GuessedWordsContext.useGuessedWords = jest.fn().mockReturnValue([guessedWords, jest.fn()]);
 
-const setup = (props?: Props) => {
-    const setupProps: Props = {...defaultProps, ...props};
-    
-    return shallow(<GuessedWords {...setupProps} />);
+    return shallow(<GuessedWords />);
 };
 
 describe('<GuessedWords /> with no words guessed', () => {
     let wrapper: ShallowWrapper;
     beforeEach(() => {
-        wrapper = setup({ guessedWords: []});
+        wrapper = setup([]);
     });
 
     test('renders without error', () => {
@@ -43,7 +38,7 @@ describe('if there are words guessed', () => {
     ];
     
     beforeEach(() => {
-        wrapper = setup({ guessedWords });
+        wrapper = setup(guessedWords);
     });
 
     test('renders without error', () => {
@@ -69,21 +64,21 @@ describe('if there are words guessed', () => {
 describe('language picker', () => {
     describe('english', () => {
         test('renders guess instructions in english by default', () => {
-            const wrapper = setup({ guessedWords: [] });
+            const wrapper = setup([]);
             const guessInstructions = wrapper.find('#instructions');
     
             expect(guessInstructions.text()).toBe('Try to guess the secret word!');
         });
       
         test('renders guessed words header in english by default', () => {
-            const wrapper = setup({ guessedWords: [{ word: 'foo', letterMatchCount: 1}] });
+            const wrapper = setup([{ word: 'foo', letterMatchCount: 1}]);
             const guessInstructions = wrapper.find('#guessed-words-header');
     
             expect(guessInstructions.text()).toBe('Guessed Words');
         });
         
         test('renders guess letter match count in english by default', () => {
-            const wrapper = setup({ guessedWords: [{ word: 'foo', letterMatchCount: 1}] });
+            const wrapper = setup([{ word: 'foo', letterMatchCount: 1}]);
             const firstGuesedWord = wrapper.find('#guessed-words').first();
     
             expect(firstGuesedWord.text()).toBe('foo - 1 Matching Letters');
@@ -96,21 +91,21 @@ describe('language picker', () => {
         });
 
         test('renders guess instructions in emoji', () => {
-            const wrapper = setup({ guessedWords: [] });
+            const wrapper = setup([]);
             const guessInstructions = wrapper.find('#instructions');
     
             expect(guessInstructions.text()).toBe('🤔🤫🔤');
         });  
 
         test('renders guessed words header in emoji', () => {
-            const wrapper = setup({ guessedWords: [{ word: 'foo', letterMatchCount: 1}] });
+            const wrapper = setup([{ word: 'foo', letterMatchCount: 1}]);
             const guessInstructions = wrapper.find('#guessed-words-header');
     
             expect(guessInstructions.text()).toBe('🤷‍');
         });
 
         test('renders guess letter match count in emoji', () => {
-            const wrapper = setup({ guessedWords: [{ word: 'foo', letterMatchCount: 1}] });
+            const wrapper = setup([{ word: 'foo', letterMatchCount: 1}]);
             const firstGuesedWord = wrapper.find('#guessed-words').first();
     
             expect(firstGuesedWord.text()).toBe('foo - 1 ✅');
